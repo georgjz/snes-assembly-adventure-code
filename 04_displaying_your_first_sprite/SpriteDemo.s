@@ -1,3 +1,8 @@
+; -----------------------------------------------------------------------------
+;   File: SpriteDemo.s
+;   Description: Displays four simple sprites
+; -----------------------------------------------------------------------------
+
 ;----- Aliases/Labels ----------------------------------------------------------
 ; these are aliases for the Memory Mapped Registers we will use
 INIDISP     = $2100     ; inital settings for screen
@@ -175,3 +180,4 @@ CGRAMLoop:
 .addr           $0000,      $0000,      $0000
 ;               NMI,        RST,        IRQ
 .addr           $0000,      ResetHandler, $0000
+;-------------------------------------------------------------------------------

@@ -10,7 +10,7 @@
 ;-------------------------------------------------------------------------------
 
 ;-------------------------------------------------------------------------------
-;   This is were the magic happens
+;   This is where execution starts
 ;-------------------------------------------------------------------------------
 .segment "CODE"
 .proc   ResetHandler            ; program entry point
@@ -23,16 +23,25 @@
 
         jmp GameLoop            ; initialisation done, jump to game loop
 .endproc
+;-------------------------------------------------------------------------------
 
+;-------------------------------------------------------------------------------
+;   Main Game Loop: All code here runs while the SNES is drawing
+;-------------------------------------------------------------------------------
 .proc   GameLoop                ; The main game loop
         wai                     ; wait for NMI interrupt
         jmp GameLoop            ; jump to beginning of main game loop
 .endproc
+;-------------------------------------------------------------------------------
 
+;-------------------------------------------------------------------------------
+;   NMI Routine: All code here runs during vblank
+;-------------------------------------------------------------------------------
 .proc   NMIHandler              ; NMIHandler, called every frame/V-blank
         lda $4210               ; read NMI status
         rti                     ; interrupt done, return to main game loop
 .endproc
+;-------------------------------------------------------------------------------
 
 ;-------------------------------------------------------------------------------
 ;   Interrupt and Reset vectors for the 65816 CPU
@@ -49,3 +58,4 @@
 .addr           $0000,      $0000,      $0000
 ;               NMI,        RST,        IRQ
 .addr           $0000 ,     ResetHandler, $0000
+;-------------------------------------------------------------------------------

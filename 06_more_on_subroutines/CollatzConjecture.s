@@ -5,6 +5,9 @@
 NMITIMEN    = $4200     ; enable flaog for v-blank
 RDNMI       = $4210     ; read the NMI flag status
 
+;-------------------------------------------------------------------------------
+;   This is where execution starts
+;-------------------------------------------------------------------------------
 .segment "CODE"
 .proc   ResetHandler
         ; switch to emulation mode, set X and Y to 16-bit
