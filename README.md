@@ -8,5 +8,7 @@ The code in this repository has been updated to work with both [bsnes+][bsnes+] 
 
 ![Mesen-S Emulation Settings](snesaa01_mesensetup.png "Mesen-S Emulation Settings")
 
+Otherwise, the code examples here won't work. Starting with part 9, the settings no longer matters as proper initialization code for the SNES is added.
+
 [bsnes+]: https://github.com/devinacker/bsnes-plus
 [mesen-s]: https://github.com/SourMesen/Mesen-S
