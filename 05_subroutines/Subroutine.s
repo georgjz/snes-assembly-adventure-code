@@ -21,6 +21,14 @@
         lda #$81                ; enable...
         sta $4200               ; ...non-maskable interrupt
 
+        rep #$10                ; clear the Index Register Select flag
+        sep #$20                ; set the Memory/Accumulator Select flag
+
+        ; load values into X and Y
+        ldx #$1212              ; X = $1212
+        ldy #$cccc              ; Y = $cccc
+        jsr AddXtoY             ; jump to subroutine
+
         jmp GameLoop            ; initialisation done, jump to game loop
 .endproc
 
@@ -42,6 +50,20 @@
 .endproc
 ;-------------------------------------------------------------------------------
 
+;-------------------------------------------------------------------------------
+;   AddXtoY: Example subroutine
+;-------------------------------------------------------------------------------
+.proc   AddXtoY
+        rep #$20                ; set A to 16-bit
+        phx                     ; save X on stack
+        tya                     ; copy Y into A
+        clc                     ; clear carry flag for addition
+        adc $01,S               ; add X to A, X is stored on stack
+        tay                     ; copy A into Y, result now in Y
+        plx                     ; clean up stack pointer
+        rts                     ; return from subroutine
+.endproc
+;-------------------------------------------------------------------------------
 ;-------------------------------------------------------------------------------
 ;   Interrupt and Reset vectors for the 65816 CPU
 ;-------------------------------------------------------------------------------
