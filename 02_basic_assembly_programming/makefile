@@ -1,3 +1,3 @@
-coin:
-	ca65 --cpu 65816 -o coin.o coin.s
-	ld65 -C memmap.cfg coin.o -o coin.smc
+extralife:
+	ca65 --cpu 65816 -o extralife.o extralife.s
+	ld65 -C memmap.cfg extralife.o -o extralife.smc

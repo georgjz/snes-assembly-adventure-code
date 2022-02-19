@@ -1,5 +1,5 @@
 ; -----------------------------------------------------------------------------
-;   File: nihil.s
+;   File: extralife.s
 ;   Description: a simple coin counter example
 ; -----------------------------------------------------------------------------
 
@@ -41,6 +41,31 @@
         rti                     ; interrupt done, return to main game loop
 .endproc
 
+.proc   ExtraLife
+        ; We initalize two "variables" with zero and three.
+        ; We will use the memory locations $00:0000 and $00:0001
+        ; to store the number of coins and lives.
+        lda #$00                ; load the A register with zero...
+        sta $0000               ; ...and store in memory at $00:0000
+        lda #$03                ; load the A register with three...
+        sta $0001               ; ...and store in memory at $00:0001
+
+        ; ...here goes some game code...
+
+        ; now let's check the number of coins
+        lda $0000               ; load the number of coins into the accumulator
+        cmp #100                ; compare the number in accumulator to 100
+        bcc Done                ; if the number in accumulator is less than 100, jump to done
+        lda #$00                ; else, load the accumulator with zero...
+        sta $0000               ; ...and reset the coin counter
+        lda $0001               ; next, get the current number of lives...
+        clc                     ; ...clear the carry flag...
+        adc #$01                ; ...and add one to the number in A
+        sta $0001               ; store the new number of lives
+Done:                           ; all done
+.endproc
+
+; ...some more game code...
 ;-------------------------------------------------------------------------------
 ;   Interrupt and Reset vectors for the 65816 CPU
 ;-------------------------------------------------------------------------------
