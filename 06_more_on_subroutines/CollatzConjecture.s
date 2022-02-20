@@ -2,6 +2,7 @@
 ;   File: CollatzConjecture.s
 ;   Description: Calculate the total stopping time of the Collatz Conjecture on a SNES
 ; -----------------------------------------------------------------------------
+
 NMITIMEN    = $4200     ; enable flaog for v-blank
 RDNMI       = $4210     ; read the NMI flag status
 
@@ -130,3 +131,4 @@ Return:
 .addr           $0000,      $0000,      $0000
 ;               NMI,        RST,        IRQ
 .addr           $0000,      ResetHandler, $0000
+;-------------------------------------------------------------------------------
