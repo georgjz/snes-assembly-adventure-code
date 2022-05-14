@@ -1,5 +1,5 @@
 ; -----------------------------------------------------------------------------
-;   File: BouncingSprite.s
+;   File: JoypadSprite.s
 ;   Description: Displays a sprite that bounces off the edges
 ; -----------------------------------------------------------------------------
 
@@ -122,26 +122,26 @@ ColorData:  .incbin "SpriteColors.pal"
         sta OAMMIRROR, X
         inx
         ; upper-right sprite
-        lda #(SCREEN_RIGHT/2)               ; sprite 2, horizontal position
+        lda #(SCREEN_RIGHT/2)               ; sprite 3, horizontal position
         sta OAMMIRROR, X
         inx                                 ; increment index
-        lda #(SCREEN_BOTTOM/2 - SPRITE_SIZE); sprite 2, vertical position
+        lda #(SCREEN_BOTTOM/2 - SPRITE_SIZE); sprite 3, vertical position
         sta OAMMIRROR, X
         inx
-        lda #$01                            ; sprite 2, name
+        lda #$01                            ; sprite 3, name
         sta OAMMIRROR, X
         inx
         lda #$00                            ; no flip, palette 0
         sta OAMMIRROR, X
         inx
         ; lower-left sprite
-        lda #(SCREEN_RIGHT/2 - SPRITE_SIZE) ; sprite 3, horizontal position
+        lda #(SCREEN_RIGHT/2 - SPRITE_SIZE) ; sprite 2, horizontal position
         sta OAMMIRROR, X
         inx                                 ; increment index
-        lda #(SCREEN_BOTTOM/2)              ; sprite 3, vertical position
+        lda #(SCREEN_BOTTOM/2)              ; sprite 2, vertical position
         sta OAMMIRROR, X
         inx
-        lda #$02                            ; sprite 3, name
+        lda #$02                            ; sprite 2, name
         sta OAMMIRROR, X
         inx
         lda #$00                            ; no flip, palette 0
@@ -292,9 +292,9 @@ CheckDownButtonDone:
 CorrectVerticalPositionDown:
         sep #$20                            ; set A to 8-bit
         stz OAMMIRROR + 1                   ; sprite 1, vertical position
-        stz OAMMIRROR + 5                   ; sprite 2, vertical position
+        stz OAMMIRROR + 5                   ; sprite 3, vertical position
         lda #SPRITE_SIZE
-        sta OAMMIRROR + 9                   ; sprite 3, vertical position
+        sta OAMMIRROR + 9                   ; sprite 2, vertical position
         sta OAMMIRROR + 13                  ; sprite 4, vertical position
         rep #$20                            ; set A to 16-bit
         jmp CheckLeftButton                 ; continue input check
@@ -303,9 +303,9 @@ CorrectVerticalPositionUp:
         sep #$20                            ; set A to 8-bit
         lda #(SCREEN_BOTTOM - 2 * SPRITE_SIZE)
         sta OAMMIRROR + 1                   ; sprite 1, vertical position
-        sta OAMMIRROR + 5                   ; sprite 2, vertical position
+        sta OAMMIRROR + 5                   ; sprite 3, vertical position
         lda #(SCREEN_BOTTOM - SPRITE_SIZE)
-        sta OAMMIRROR + 9                   ; sprite 3, vertical position
+        sta OAMMIRROR + 9                   ; sprite 2, vertical position
         sta OAMMIRROR + 13                  ; sprite 4, vertical position
         rep #$20                            ; set A to 16-bit
 
@@ -317,7 +317,7 @@ CheckLeftButton:
         beq CheckLeftButtonDone             ; if neither has occured, move on
         ; else, move sprites up
         ldy #$0000                          ; Y is the loop counter
-        ldx #$0000                          ; set offset to 1, to manipulate sprite vertical positions
+        ldx #$0000                          ; set offset to 0, to manipulate sprite horizontal positions
         sep #$20                            ; set A to 8-bit
 MoveSpritesLeft:
         lda OAMMIRROR, X
@@ -343,7 +343,7 @@ CheckRightButton:
         beq CheckRightButtonDone            ; if neither has occured, move on
         ; else, move sprites down
         ldy #$0000                          ; Y is the loop counter
-        ldx #$0000                          ; set offset to 1, to manipulate sprite vertical positions
+        ldx #$0000                          ; set offset to 0, to manipulate sprite horizontal positions
         sep #$20                            ; set A to 8-bit
         ; check whether sprites move beyond right boundry
         lda OAMMIRROR, X
@@ -370,9 +370,9 @@ CheckRightButtonDone:
 CorrectHorizontalPositionRight:
         sep #$20                            ; set A to 8-bit
         stz OAMMIRROR + 0                   ; sprite 1, horizontal position
-        stz OAMMIRROR + 8                   ; sprite 3, horizontal position
+        stz OAMMIRROR + 8                   ; sprite 2, horizontal position
         lda #SPRITE_SIZE
-        sta OAMMIRROR + 4                   ; sprite 2, horizontal position
+        sta OAMMIRROR + 4                   ; sprite 3, horizontal position
         sta OAMMIRROR + 12                  ; sprite 4, horizontal position
         jmp InputDone
 
@@ -380,9 +380,9 @@ CorrectHorizontalPositionLeft:
         sep #$20                            ; set A to 8-bit
         lda #(SCREEN_RIGHT - 2 * SPRITE_SIZE)
         sta OAMMIRROR + 0                   ; sprite 1, horizontal position
-        sta OAMMIRROR + 8                   ; sprite 3, horizontal position
+        sta OAMMIRROR + 8                   ; sprite 2, horizontal position
         lda #(SCREEN_RIGHT - SPRITE_SIZE)
-        sta OAMMIRROR + 4                   ; sprite 2, horizontal position
+        sta OAMMIRROR + 4                   ; sprite 3, horizontal position
         sta OAMMIRROR + 12                  ; sprite 4, horizontal position
 
 InputDone:

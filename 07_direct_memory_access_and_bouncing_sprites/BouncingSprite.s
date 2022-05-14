@@ -111,26 +111,26 @@ ColorData:  .incbin "SpriteColors.pal"
         sta OAMMIRROR, X
         inx
         ; upper-right sprite
-        lda #(SCREEN_RIGHT/2)               ; sprite 2, horizontal position
+        lda #(SCREEN_RIGHT/2)               ; sprite 3, horizontal position
         sta OAMMIRROR, X
         inx                                 ; increment index
-        lda #(SCREEN_BOTTOM/2 - SPRITE_SIZE); sprite 2, vertical position
+        lda #(SCREEN_BOTTOM/2 - SPRITE_SIZE); sprite 3, vertical position
         sta OAMMIRROR, X
         inx
-        lda #$01                            ; sprite 2, name
+        lda #$01                            ; sprite 3, name
         sta OAMMIRROR, X
         inx
         lda #$00                            ; no flip, palette 0
         sta OAMMIRROR, X
         inx
         ; lower-left sprite
-        lda #(SCREEN_RIGHT/2 - SPRITE_SIZE) ; sprite 3, horizontal position
+        lda #(SCREEN_RIGHT/2 - SPRITE_SIZE) ; sprite 2, horizontal position
         sta OAMMIRROR, X
         inx                                 ; increment index
-        lda #(SCREEN_BOTTOM/2)              ; sprite 3, vertical position
+        lda #(SCREEN_BOTTOM/2)              ; sprite 2, vertical position
         sta OAMMIRROR, X
         inx
-        lda #$02                            ; sprite 3, name
+        lda #$02                            ; sprite 2, name
         sta OAMMIRROR, X
         inx
         lda #$00                            ; no flip, palette 0
