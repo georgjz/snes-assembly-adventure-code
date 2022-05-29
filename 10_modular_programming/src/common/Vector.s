@@ -1,6 +1,6 @@
 ; -----------------------------------------------------------------------------
 ;   File: Vector.s
-;   Description: Interrup and reset vectors for the 65816 CPU
+;   Description: Interrupt and reset vectors for the 65816 CPU
 ; -----------------------------------------------------------------------------
 
 ;----- Assembler Directives ----------------------------------------------------
