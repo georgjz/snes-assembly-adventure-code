@@ -29,6 +29,14 @@
         sei                     ; disable interrupts
         clc                     ; clear the carry flag
         xce                     ; switch the 65816 to native (16-bit mode)
+        rep #$10                ; set X and Y to 16-bit
+        sep #$20                ; set A to 8-bit
+        lda #$8f                ; force v-blanking
+        sta INIDISP
+        stz NMITIMEN            ; disable NMI
+        ; set the stack pointer to $1fff
+        ldx #$1fff              ; load X with $1fff
+        txs                     ; copy X to stack pointer
         jsr InitDemo            ; initialize the demo
         jmp GameLoop            ; enter main game loop
 .endproc

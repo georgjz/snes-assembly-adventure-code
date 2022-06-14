@@ -9,6 +9,8 @@
 
 ;----- Assembler Directives ----------------------------------------------------
 .p816                           ; tell the assembler this is 65816 code
+.a8
+.i16
 ;-------------------------------------------------------------------------------
 
 ;----- Includes ----------------------------------------------------------------
@@ -24,15 +26,6 @@
 ;   This initializes the demo
 ;-------------------------------------------------------------------------------
 .proc   InitDemo
-        rep #$10                ; set X and Y to 16-bit
-        sep #$20                ; set A to 8-bit
-        lda #$8f                ; force v-blanking
-        sta INIDISP
-        stz NMITIMEN            ; disable NMI
-        ; set the stack pointer to $1fff
-        ldx #$1fff              ; load X with $1fff
-        txs                     ; copy X to stack pointer
-
         ; load sprites into VRAM
         tsx                     ; save current stack pointer
         pea $0000               ; push VRAM destination address to stack
