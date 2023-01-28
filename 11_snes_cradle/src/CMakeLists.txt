@@ -8,4 +8,4 @@ add_subdirectory( Game )
 add_subdirectory( PPU )
 
 target_sources( ${PROJECT_NAME}
-    PRIVATE JoypadSprite.s )
+    PRIVATE Main.s )

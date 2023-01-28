@@ -1,6 +1,6 @@
 ; -----------------------------------------------------------------------------
-;   File: JoypadSprite.s
-;   Description: Displays a sprite that bounces off the edges
+;   File: Main.s
+;   Description: Displays a sprite movable with the dpad
 ; -----------------------------------------------------------------------------
 
 ;----- Export ------------------------------------------------------------------
@@ -16,6 +16,7 @@
 .include "Assets.inc"
 .include "GameConstants.inc"
 .include "Init.inc"
+.include "Joypad.inc"
 .include "MemoryMapWRAM.inc"
 .include "PPU.inc"
 .include "Registers.inc"
@@ -49,26 +50,21 @@
         wai                                 ; wait for NMI / V-Blank
 
         ; read joypad 1
-        ; check whether joypad is ready
-WaitForJoypad:
-        lda HVBJOY                          ; get joypad status
-        and #$01                            ; check whether joypad done reading...
-        beq WaitForJoypad                   ; ...if not, wait a bit more
-        ; first, check for newly pressed buttons since last frame
-        rep #$20                            ; set A to 16-bit
-        lda STDCNTRL1L                      ; get new input from this frame
-        ldy JOYPAD1                         ; get input from last frame
-        sta JOYPAD1                         ; store new input from this frame
-        tya                                 ; check for newly pressed buttons...
-        eor JOYPAD1                         ; filter buttons that were not pressed last frame
-        and JOYPAD1                         ; filter held buttons from last frame
-        sta JOYTRIGGER1                     ; ...and store them
-        ; second, check for buttons held from last frame
-        tya                                 ; get input from last frame
-        and JOYPAD1                         ; filter held buttons from last frame...
-        sta JOYHELD1                        ; ...store them
+        ; push addresses of joy pad data to stack
+        ldx #JOYHELD1
+        phx
+        ldx #JOYTRIGGER1
+        phx
+        ldx #JOYRAW1
+        phx
+        jsr ReadJoypad1
+        ; stack clean up
+        plx
+        plx
+        plx
 
         ; check the dpad, if any of the directional buttons where pressed or held,
+        rep #$20                            ; set A to 16-bit
         ; move the sprites accordingly
 CheckUpButton:
         lda #$0000                          ; set A to zero
