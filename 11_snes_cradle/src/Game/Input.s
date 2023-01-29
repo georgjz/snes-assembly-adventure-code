@@ -45,21 +45,21 @@ CheckUpButton:
         and #UP_BUTTON
         beq CheckUpButtonDone               ; if neither has occured, move on
         ; else, move sprites up
-        ldy #$0000                          ; Y is the loop counter
-        ldx #$0001                          ; set offset to 1, to manipulate sprite vertical positions
+        ldx #$0000                          ; X is the loop counter
+        ldy #$0001                          ; Y is the offset into the OAM mirror
         sep #$20                            ; set A to 8-bit
 MoveSpritesUp:
-        lda OAMMIRROR, X
+        lda (OAM), Y
         sec
         sbc VER_SPEED
         bcc CorrectVerticalPositionDown     ; if vertical position is below zero, correct it down
-        sta OAMMIRROR, X
-        inx                                 ; increment X by 4
-        inx
-        inx
-        inx
+        sta (OAM), Y
+        iny                                 ; increment Y by 4
         iny
-        cpy #$0004                          ; unless Y = 4, continue loop
+        iny
+        iny
+        inx
+        cpx #$0004                          ; unless X = 4, continue loop
         bne MoveSpritesUp
 CheckUpButtonDone:
         rep #$20                            ; set A to 16-bit
@@ -71,26 +71,26 @@ CheckDownButton:
         and #DOWN_BUTTON
         beq CheckDownButtonDone             ; if neither has occured, move on
         ; else, move sprites down
-        ldy #$0000                          ; Y is the loop counter
-        ldx #$0001                          ; set offset to 1, to manipulate sprite vertical positions
+        ldx #$0000                          ; X is the loop counter
+        ldy #$0001                          ; Y is the offset into the OAM mirror
         sep #$20                            ; set A to 8-bit
         ; check if sprites move below buttom boundry
-        lda OAMMIRROR, X
+        lda (OAM), Y
         clc
         adc VER_SPEED
         cmp #(SCREEN_BOTTOM - 2 * SPRITE_SIZE)
         bcs CorrectVerticalPositionUp
 MoveSpritesDown:
-        lda OAMMIRROR, X
+        lda (OAM), Y
         clc
         adc VER_SPEED
-        sta OAMMIRROR, X
-        inx                                 ; increment X by 4
-        inx
-        inx
-        inx
+        sta (OAM), Y
+        iny                                 ; increment Y by 4
         iny
-        cpy #$0004                          ; unless Y = 4, continue loop
+        iny
+        iny
+        inx
+        cpx #$0004                          ; unless X = 4, continue loop
         bne MoveSpritesDown
 CheckDownButtonDone:
         rep #$20                            ; set A to 16-bit
@@ -98,22 +98,23 @@ CheckDownButtonDone:
 
 CorrectVerticalPositionDown:
         sep #$20                            ; set A to 8-bit
-        stz OAMMIRROR + 1                   ; sprite 1, vertical position
-        stz OAMMIRROR + 5                   ; sprite 3, vertical position
+        lda #$0000                          ; set A to zero
+        stz (OAM + 1)                       ; sprite 1, vertical position
+        stz (OAM + 5)                       ; sprite 3, vertical position
         lda #SPRITE_SIZE
-        sta OAMMIRROR + 9                   ; sprite 2, vertical position
-        sta OAMMIRROR + 13                  ; sprite 4, vertical position
+        sta (OAM + 9)                       ; sprite 2, vertical position
+        sta (OAM + 13)                      ; sprite 4, vertical position
         rep #$20                            ; set A to 16-bit
         jmp CheckLeftButton                 ; continue input check
 
 CorrectVerticalPositionUp:
         sep #$20                            ; set A to 8-bit
         lda #(SCREEN_BOTTOM - 2 * SPRITE_SIZE)
-        sta OAMMIRROR + 1                   ; sprite 1, vertical position
-        sta OAMMIRROR + 5                   ; sprite 3, vertical position
+        sta (OAM + 1)                       ; sprite 1, vertical position
+        sta (OAM + 5)                       ; sprite 3, vertical position
         lda #(SCREEN_BOTTOM - SPRITE_SIZE)
-        sta OAMMIRROR + 9                   ; sprite 2, vertical position
-        sta OAMMIRROR + 13                  ; sprite 4, vertical position
+        sta (OAM + 9)                       ; sprite 2, vertical position
+        sta (OAM + 13)                      ; sprite 4, vertical position
         rep #$20                            ; set A to 16-bit
 
 CheckLeftButton:
