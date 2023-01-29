@@ -4,4 +4,5 @@ target_compile_options( ${PROJECT_NAME}
     PRIVATE "SHELL:-I ${CMAKE_CURRENT_SOURCE_DIR}" )
 
 target_sources( ${PROJECT_NAME}
-    PRIVATE Init.s )
+    PRIVATE Init.s
+    PRIVATE Input.s )
