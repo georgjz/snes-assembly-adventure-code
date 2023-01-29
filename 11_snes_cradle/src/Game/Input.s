@@ -21,15 +21,27 @@
 .segment "CODE"
 ;-------------------------------------------------------------------------------
 ;   This subroutines handles all input
+;   Parameters: Raw: .addr, Trigger: .addr, Held: .addr, OAM: .addr
 ;-------------------------------------------------------------------------------
 .proc   HandleInput
+        phx                                 ; save old stack pointer
+        ; create frame pointer
+        phd                                 ; push Direct Register to stack
+        tsc                                 ; transfer Stack to... (via Accumulator)
+        tcd                                 ; ...Direct Register.
+        ; use constants to access arguments on stack with Direct Addressing
+        Raw         = $07                   ; address to store raw input data
+        Trigger     = $09                   ; address to store triggered buttons
+        Held        = $0b                   ; address to store held buttons
+        OAM         = $0d                   ; address pointing to OAM mirror
+
         rep #$20                            ; set A to 16-bit
         ; check the dpad, if any of the directional buttons where pressed or held,
         ; move the sprites accordingly
 CheckUpButton:
         lda #$0000                          ; set A to zero
-        ora JOYTRIGGER1                     ; check whether the up button was pressed this frame...
-        ora JOYHELD1                        ; ...or held from last frame
+        ora (Trigger)                       ; check whether the up button was pressed this frame...
+        ora (Held)                          ; ...or held from last frame
         and #UP_BUTTON
         beq CheckUpButtonDone               ; if neither has occured, move on
         ; else, move sprites up
@@ -54,8 +66,8 @@ CheckUpButtonDone:
 
 CheckDownButton:
         lda #$0000                          ; set A to zero
-        ora JOYTRIGGER1                     ; check whether the down button was pressed this frame...
-        ora JOYHELD1                        ; ...or held from last frame
+        ora (Trigger)                       ; check whether the down button was pressed this frame...
+        ora (Held)                          ; ...or held from last frame
         and #DOWN_BUTTON
         beq CheckDownButtonDone             ; if neither has occured, move on
         ; else, move sprites down
@@ -106,8 +118,8 @@ CorrectVerticalPositionUp:
 
 CheckLeftButton:
         lda #$0000                          ; set A to zero
-        ora JOYTRIGGER1                     ; check whether the up button was pressed this frame...
-        ora JOYHELD1                        ; ...or held from last frame
+        ora (Trigger)                       ; check whether the up button was pressed this frame...
+        ora (Held)                          ; ...or held from last frame
         and #LEFT_BUTTON
         beq CheckLeftButtonDone             ; if neither has occured, move on
         ; else, move sprites up
@@ -132,8 +144,8 @@ CheckLeftButtonDone:
 
 CheckRightButton:
         lda #$0000                          ; set A to zero
-        ora JOYTRIGGER1                     ; check whether the down button was pressed this frame...
-        ora JOYHELD1                        ; ...or held from last frame
+        ora (Trigger)                       ; check whether the down button was pressed this frame...
+        ora (Held)                          ; ...or held from last frame
         and #RIGHT_BUTTON
         beq CheckRightButtonDone            ; if neither has occured, move on
         ; else, move sprites down
@@ -182,7 +194,9 @@ CorrectHorizontalPositionLeft:
 
 InputDone:
         sep #$20                            ; set A back to 8-bit
+        pld                                 ; restore D...
+        plx                                 ; ...and X registers
 
-        rts                     ; all initialization is done
+        rts
 .endproc
 ;-------------------------------------------------------------------------------

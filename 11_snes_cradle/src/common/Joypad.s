@@ -25,15 +25,15 @@
 ;   Parameters: Raw: .addr, Trigger: .addr, Held: .addr
 ;-------------------------------------------------------------------------------
 .proc   ReadJoypad1
-        phx                     ; save old stack pointer
+        phx                                 ; save old stack pointer
         ; create frame pointer
-        phd                     ; push Direct Register to stack
-        tsc                     ; transfer Stack to... (via Accumulator)
-        tcd                     ; ...Direct Register.
+        phd                                 ; push Direct Register to stack
+        tsc                                 ; transfer Stack to... (via Accumulator)
+        tcd                                 ; ...Direct Register.
         ; use constants to access arguments on stack with Direct Addressing
-        Raw         = $07       ; address to store raw input data
-        Trigger     = $09       ; address to store triggered buttons
-        Held        = $0b       ; address to store held buttons
+        Raw         = $07                   ; address to store raw input data
+        Trigger     = $09                   ; address to store triggered buttons
+        Held        = $0b                   ; address to store held buttons
 
         ; check whether joypad is ready
 WaitForJoypad:
@@ -71,15 +71,15 @@ WaitForJoypad:
 ;   Parameters: Raw: .addr, Trigger: .addr, Held: .addr
 ;-------------------------------------------------------------------------------
 .proc   ReadJoypad2
-        phx                     ; save old stack pointer
+        phx                                 ; save old stack pointer
         ; create frame pointer
-        phd                     ; push Direct Register to stack
-        tsc                     ; transfer Stack to... (via Accumulator)
-        tcd                     ; ...Direct Register.
+        phd                                 ; push Direct Register to stack
+        tsc                                 ; transfer Stack to... (via Accumulator)
+        tcd                                 ; ...Direct Register.
         ; use constants to access arguments on stack with Direct Addressing
-        Raw         = $07       ; address to store raw input data
-        Trigger     = $09       ; address to store triggered buttons
-        Held        = $0b       ; address to store held buttons
+        Raw         = $07                   ; address to store raw input data
+        Trigger     = $09                   ; address to store triggered buttons
+        Held        = $0b                   ; address to store held buttons
 
         ; check whether joypad is ready
 WaitForJoypad:
@@ -108,6 +108,7 @@ WaitForJoypad:
         sep #$20                            ; set A back to 8-bit
         pld                                 ; restore D...
         plx                                 ; ...and X registers
+
         rts
 .endproc
 ;-------------------------------------------------------------------------------

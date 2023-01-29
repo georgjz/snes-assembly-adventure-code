@@ -64,7 +64,21 @@
         plx
         plx
 
+        ; push addresses of joypad 1 data to stack
+        ldx #OAMMIRROR
+        phx
+        ldx #JOYHELD1
+        phx
+        ldx #JOYTRIGGER1
+        phx
+        ldx #JOYRAW1
+        phx
         jsr HandleInput
+        ; stack clean up
+        plx
+        plx
+        plx
+        plx
 
         jmp GameLoop
 .endproc
