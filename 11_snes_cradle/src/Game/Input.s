@@ -21,7 +21,7 @@
 .segment "CODE"
 ;-------------------------------------------------------------------------------
 ;   This subroutines handles all input
-;   Parameters: Raw: .addr, Trigger: .addr, Held: .addr, OAM: .addr
+;   Parameters: Raw: .addr, Trigger: .addr, Held: .addr
 ;-------------------------------------------------------------------------------
 .proc   HandleInput
         phx                                 ; save old stack pointer
@@ -33,7 +33,6 @@
         Raw         = $07                   ; address to store raw input data
         Trigger     = $09                   ; address to store triggered buttons
         Held        = $0b                   ; address to store held buttons
-        OAM         = $0d                   ; address pointing to OAM mirror
 
         rep #$20                            ; set A to 16-bit
         ; check the dpad, if any of the directional buttons where pressed or held,
@@ -49,11 +48,11 @@ CheckUpButton:
         ldy #$0001                          ; Y is the offset into the OAM mirror
         sep #$20                            ; set A to 8-bit
 MoveSpritesUp:
-        lda (OAM), Y
+        lda OAMMIRROR, Y
         sec
         sbc VER_SPEED
         bcc CorrectVerticalPositionDown     ; if vertical position is below zero, correct it down
-        sta (OAM), Y
+        sta OAMMIRROR, Y
         iny                                 ; increment Y by 4
         iny
         iny
@@ -75,16 +74,16 @@ CheckDownButton:
         ldy #$0001                          ; Y is the offset into the OAM mirror
         sep #$20                            ; set A to 8-bit
         ; check if sprites move below buttom boundry
-        lda (OAM), Y
+        lda OAMMIRROR, Y
         clc
         adc VER_SPEED
         cmp #(SCREEN_BOTTOM - 2 * SPRITE_SIZE)
         bcs CorrectVerticalPositionUp
 MoveSpritesDown:
-        lda (OAM), Y
+        lda OAMMIRROR, Y
         clc
         adc VER_SPEED
-        sta (OAM), Y
+        sta OAMMIRROR, Y
         iny                                 ; increment Y by 4
         iny
         iny
@@ -99,22 +98,22 @@ CheckDownButtonDone:
 CorrectVerticalPositionDown:
         sep #$20                            ; set A to 8-bit
         lda #$0000                          ; set A to zero
-        stz (OAM + 1)                       ; sprite 1, vertical position
-        stz (OAM + 5)                       ; sprite 3, vertical position
+        stz OAMMIRROR + 1                   ; sprite 1, vertical position
+        stz OAMMIRROR + 5                   ; sprite 3, vertical position
         lda #SPRITE_SIZE
-        sta (OAM + 9)                       ; sprite 2, vertical position
-        sta (OAM + 13)                      ; sprite 4, vertical position
+        sta OAMMIRROR + 9                   ; sprite 2, vertical position
+        sta OAMMIRROR + 13                  ; sprite 4, vertical position
         rep #$20                            ; set A to 16-bit
         jmp CheckLeftButton                 ; continue input check
 
 CorrectVerticalPositionUp:
         sep #$20                            ; set A to 8-bit
         lda #(SCREEN_BOTTOM - 2 * SPRITE_SIZE)
-        sta (OAM + 1)                       ; sprite 1, vertical position
-        sta (OAM + 5)                       ; sprite 3, vertical position
+        sta OAMMIRROR + 1                   ; sprite 1, vertical position
+        sta OAMMIRROR + 5                   ; sprite 3, vertical position
         lda #(SCREEN_BOTTOM - SPRITE_SIZE)
-        sta (OAM + 9)                       ; sprite 2, vertical position
-        sta (OAM + 13)                      ; sprite 4, vertical position
+        sta OAMMIRROR + 9                   ; sprite 2, vertical position
+        sta OAMMIRROR + 13                  ; sprite 4, vertical position
         rep #$20                            ; set A to 16-bit
 
 CheckLeftButton:
@@ -124,21 +123,21 @@ CheckLeftButton:
         and #LEFT_BUTTON
         beq CheckLeftButtonDone             ; if neither has occured, move on
         ; else, move sprites up
-        ldy #$0000                          ; Y is the loop counter
-        ldx #$0000                          ; set offset to 0, to manipulate sprite horizontal positions
+        ldx #$0000                          ; X is the loop counter
+        ldy #$0000                          ; Y is the offset into the OAM mirror
         sep #$20                            ; set A to 8-bit
 MoveSpritesLeft:
-        lda OAMMIRROR, X
+        lda OAMMIRROR, Y
         sec
         sbc HOR_SPEED
         bcc CorrectHorizontalPositionRight
-        sta OAMMIRROR, X
-        inx                                 ; increment X by 4
-        inx
-        inx
-        inx
+        sta OAMMIRROR, Y
+        iny                                 ; increment X by 4
         iny
-        cpy #$0004                          ; unless Y = 4, continue loop
+        iny
+        iny
+        inx
+        cpx #$0004                          ; unless Y = 4, continue loop
         bne MoveSpritesLeft
 CheckLeftButtonDone:
         rep #$20                            ; set A to 16-bit
@@ -150,26 +149,26 @@ CheckRightButton:
         and #RIGHT_BUTTON
         beq CheckRightButtonDone            ; if neither has occured, move on
         ; else, move sprites down
-        ldy #$0000                          ; Y is the loop counter
-        ldx #$0000                          ; set offset to 0, to manipulate sprite horizontal positions
+        ldx #$0000                          ; X is the loop counter
+        ldy #$0000                          ; Y is the offset into the OAM mirror
         sep #$20                            ; set A to 8-bit
         ; check whether sprites move beyond right boundry
-        lda OAMMIRROR, X
+        lda OAMMIRROR, Y
         clc
         adc HOR_SPEED
         cmp #(SCREEN_RIGHT - 2 * SPRITE_SIZE)
         bcs CorrectHorizontalPositionLeft
 MoveSpritesRight:
-        lda OAMMIRROR, X
+        lda OAMMIRROR, Y
         clc
         adc HOR_SPEED
-        sta OAMMIRROR, X
-        inx                                 ; increment X by 4
-        inx
-        inx
-        inx
+        sta OAMMIRROR, Y
+        iny                                 ; increment X by 4
         iny
-        cpy #$0004                          ; unless Y = 4, continue loop
+        iny
+        iny
+        inx
+        cpx #$0004                          ; unless Y = 4, continue loop
         bne MoveSpritesRight
 CheckRightButtonDone:
         rep #$20                            ; set A to 16-bit
