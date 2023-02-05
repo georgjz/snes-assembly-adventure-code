@@ -4,5 +4,6 @@ target_compile_options( ${PROJECT_NAME}
     PRIVATE "SHELL:-I ${CMAKE_CURRENT_SOURCE_DIR}" )
 
 target_sources( ${PROJECT_NAME}
+    PRIVATE InitSNES.s
     PRIVATE Joypad.s
     PRIVATE Vector.s )

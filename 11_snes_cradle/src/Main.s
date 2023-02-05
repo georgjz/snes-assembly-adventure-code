@@ -16,6 +16,7 @@
 .include "Assets.inc"
 .include "GameConstants.inc"
 .include "Init.inc"
+.include "InitSNES.inc"
 .include "Input.inc"
 .include "Joypad.inc"
 .include "MemoryMapWRAM.inc"
@@ -39,6 +40,13 @@
         ; set the stack pointer to $1fff
         ldx #$1fff              ; load X with $1fff
         txs                     ; copy X to stack pointer
+
+        ; initialize SNES
+        jsr ClearRegisters
+        jsr ClearVRAM
+        jsr ClearCGRAM
+        jsr ClearOAMRAM
+
         jsr InitDemo            ; initialize the demo
         jmp GameLoop            ; enter main game loop
 .endproc

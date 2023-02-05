@@ -27,23 +27,23 @@
 ;-------------------------------------------------------------------------------
 .proc   InitDemo
         ; load sprites into VRAM
-        tsx                     ; save current stack pointer
-        pea $0000               ; push VRAM destination address to stack
-        pea SpriteData          ; push sprite data source address to stack
-        lda #$80                ; number of bytes (128/$80) to transfer
+        tsx                             ; save current stack pointer
+        pea $0000                       ; push VRAM destination address to stack
+        pea SpriteData                  ; push sprite data source address to stack
+        lda #$80                        ; number of bytes (128/$80) to transfer
         pha
-        jsr LoadVRAM            ; transfer sprite data to VRAM
-        txs                     ; restore old stack pointer
+        jsr LoadVRAM                    ; transfer sprite data to VRAM
+        txs                             ; restore old stack pointer
 
         ; load color data into CGRAM
-        tsx                     ; save current stack pointer
-        lda #$80                ; destination address in CGRAM
+        tsx                             ; save current stack pointer
+        lda #$80                        ; destination address in CGRAM
         pha
-        pea ColorData           ; color data source address
-        lda #$20                ; number of bytes (32/$20) to transfer
+        pea ColorData                   ; color data source address
+        lda #$20                        ; number of bytes (32/$20) to transfer
         pha
-        jsr LoadCGRAM           ; transfer color data into CGRAM
-        txs                     ; restore old stack pointer
+        jsr LoadCGRAM                   ; transfer color data into CGRAM
+        txs                             ; restore old stack pointer
 
         ; initialize OAMRAM mirror
         ldx #$00
