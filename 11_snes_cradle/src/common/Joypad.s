@@ -47,7 +47,7 @@ WaitForJoypad:
         rep #$20                            ; set A to 16-bit
         lda (Raw)                           ; get last frame's input...
         tay                                 ; ...and store in Y
-        lda STDCNTRL1L                      ; get new input from this frame
+        lda JOY1L                           ; get new input from this frame
         sta (Raw)                           ; store new input from this frame
         tya                                 ; check for newly pressed buttons...
         eor (Raw)                           ; filter buttons that were not pressed last frame
@@ -93,7 +93,7 @@ WaitForJoypad:
         rep #$20                            ; set A to 16-bit
         lda (Raw)                           ; get last frame's input...
         tay                                 ; ...and store in Y
-        lda STDCNTRL1L                      ; get new input from this frame
+        lda JOY2L                           ; get new input from this frame
         sta (Raw)                           ; store new input from this frame
         tya                                 ; check for newly pressed buttons...
         eor (Raw)                           ; filter buttons that were not pressed last frame
